@@ -16,7 +16,7 @@ Module.register("MMM-WetterOnline", {
 		userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
 		showSunHours: false,
 		showAirPressure: null,
-		showCurrent: true // Neu: Kann jetzt gesteuert werden
+		hideCurrentConditions: false
 	},
 
 	weatherData: {},
@@ -45,8 +45,7 @@ Module.register("MMM-WetterOnline", {
 		wrapper.classList.add("small");
 
 		if (Object.keys(this.weatherData).length > 0) {
-			// Aktuelles Wetter nur anzeigen, wenn showCurrent: true ist
-			if (this.config.showCurrent === true) {
+			if (!isHideCurrentConditions()) {
 				var currentWrapper = document.createElement("div");
 				currentWrapper.classList.add("weather");
 				currentWrapper.insertAdjacentHTML(
@@ -65,8 +64,7 @@ Module.register("MMM-WetterOnline", {
 			}
 
 			if (parseInt(this.config.daysTrend) > 0) {
-				// Wenn aktuelles Wetter sichtbar ist, Leerzeile einfügen
-				if (this.config.showCurrent === true) {
+				if (!isHideCurrentConditions()) {
 					wrapper.insertAdjacentHTML("beforeend", "<br />");
 				}
 
@@ -115,5 +113,9 @@ Module.register("MMM-WetterOnline", {
 			this.weatherData = payload;
 			this.updateDom();
 		}
+	},
+
+	isHideCurrentConditions() {
+		return this.config.hideCurrentConditions === true;
 	}
 });
